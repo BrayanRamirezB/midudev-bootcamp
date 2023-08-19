@@ -1,14 +1,10 @@
 import PropTypes from 'prop-types'
 
-const Total = (props) => {
-  return (
-    <p>
-      Number of excersices{' '}
-      {props.parts[0].exercises +
-        props.parts[1].exercises +
-        props.parts[2].exercises}
-    </p>
-  )
+const Total = ({ parts }) => {
+  const total = parts.reduce((s, p) => {
+    return s + p.exercises
+  }, 0)
+  return <p>Total of excersices {total}</p>
 }
 
 Total.propTypes = {
