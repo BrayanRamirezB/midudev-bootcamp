@@ -1,11 +1,17 @@
 import PropTypes from 'prop-types'
 
-const Note = ({ note }) => {
-  return <li>{note.title}</li>
+const Note = ({ title, body }) => {
+  return (
+    <li>
+      <p>{title}</p>
+      <small>{body}</small>
+    </li>
+  )
 }
 
 Note.propTypes = {
-  note: PropTypes.object,
+  title: PropTypes.string,
+  body: PropTypes.string,
 }
 
 export default Note
