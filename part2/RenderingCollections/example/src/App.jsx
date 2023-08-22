@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
-import { getAllNotes } from './services/notes/getAllNotes'
-import { createNote } from './services/notes/createNote'
+import {
+  createNote,
+  updateImportance,
+  getAllNotes
+} from './services/notes/notes.js'
 import Note from './components/Note'
 import './App.css'
 
@@ -12,10 +15,14 @@ const App = () => {
   //para hacerlo con axios
   useEffect(() => {
     setLoading(true)
-    getAllNotes().then((notes) => {
-      setNotes(notes)
-      setLoading(false)
-    })
+    getAllNotes()
+      .then((notes) => {
+        setNotes(notes)
+        setLoading(false)
+      })
+      .catch((error) => {
+        alert(error)
+      })
   }, [])
 
   //Para hacerlo con fetch
@@ -43,11 +50,28 @@ const App = () => {
       important: true
     }
 
-    createNote(noteToAddState).then((newNote) => {
-      setNotes((prevNotes) => prevNotes.concat(newNote))
-    })
+    createNote(noteToAddState)
+      .then((newNote) => {
+        setNotes((prevNotes) => prevNotes.concat(newNote))
+      })
+      .catch((error) => {
+        alert(error)
+      })
 
     setNewNote('')
+  }
+
+  const toggleImportanceOf = (id) => {
+    const note = notes.find((n) => n.id === id)
+    const changedNote = { ...note, important: !note.important }
+
+    updateImportance(id, changedNote)
+      .then((returnedNote) => {
+        setNotes(notes.map((note) => (note.id !== id ? note : returnedNote)))
+      })
+      .catch((error) => {
+        alert(error)
+      })
   }
 
   return (
@@ -57,7 +81,11 @@ const App = () => {
         {loading ? 'Loading...' : ''}
         <ul>
           {notes.map((note) => (
-            <Note key={note.id} {...note} />
+            <Note
+              key={note.id}
+              note={note}
+              toggleImportance={() => toggleImportanceOf(note.id)}
+            />
           ))}
         </ul>
         <form onSubmit={handleSubmit}>

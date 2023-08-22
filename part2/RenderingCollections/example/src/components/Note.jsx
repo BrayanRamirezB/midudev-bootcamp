@@ -1,24 +1,22 @@
 import PropTypes from 'prop-types'
 
-const Note = (props) => {
+const Note = ({ note, toggleImportance }) => {
+  const label = note.important ? 'make not important' : 'make important'
+
   return (
     <li>
-      <h3>Nota: {props.id}</h3>
       <p>
-        Content: <small>{props.content}</small>
+        Content: <small>{note.content}</small> <br />
+        Date: <small>{note.date}</small>
       </p>
-      <p>
-        Date: <small>{props.date}</small>
-      </p>
+      <button onClick={toggleImportance}>{label}</button>
     </li>
   )
 }
 
 Note.propTypes = {
-  id: PropTypes.number,
-  content: PropTypes.string,
-  date: PropTypes.string,
-  important: PropTypes.bool
+  note: PropTypes.object,
+  toggleImportance: PropTypes.func
 }
 
 export default Note

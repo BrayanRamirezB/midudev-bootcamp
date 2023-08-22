@@ -82,6 +82,30 @@ app.post('/api/notes', (req, res) => {
   res.status(201).json(newNote)
 })
 
+app.patch('/api/notes/:id', (req, res) => {
+  const note = req.body
+
+  if (!note) {
+    return res.status(400).json({ error: 'note.content is missing' })
+  }
+
+  const id = Number(req.params.id)
+  const noteIndex = notes.findIndex((n) => n.id === id)
+
+  if (note.Index === -1) {
+    return res.status(404).json({ error: 'Note not found' })
+  }
+
+  const updateNote = {
+    ...notes[noteIndex],
+    important: note.important
+  }
+
+  notes[noteIndex] = updateNote
+
+  return res.json(updateNote)
+})
+
 // Control de errores para rutas desconocidas
 app.use((req, res) => {
   res.status(404).json({ error: 'Not found' })

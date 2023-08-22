@@ -1,0 +1,7 @@
+PATCH http://localhost:3001/api/notes/4
+Content-Type: application/json
+
+{
+    "content": "Esto es una nueva nota",
+    "important": false
+}
