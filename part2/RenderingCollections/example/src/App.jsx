@@ -16,7 +16,7 @@ const App = () => {
       setNotes(notes)
       setLoading(false)
     })
-  }, [newNote])
+  }, [])
 
   //Para hacerlo con fetch
   // useEffect(() => {
@@ -39,9 +39,8 @@ const App = () => {
   const handleSubmit = (event) => {
     event.preventDefault()
     const noteToAddState = {
-      userId: 10,
-      title: newNote,
-      body: newNote,
+      content: newNote,
+      important: true
     }
 
     createNote(noteToAddState).then((newNote) => {
@@ -56,14 +55,14 @@ const App = () => {
       <div>
         <h1>Notes</h1>
         {loading ? 'Loading...' : ''}
-        <ol>
+        <ul>
           {notes.map((note) => (
             <Note key={note.id} {...note} />
           ))}
-        </ol>
+        </ul>
         <form onSubmit={handleSubmit}>
-          <input type="text" value={newNote} onChange={handleChange} />
-          <button type="submit">Save</button>
+          <input type='text' value={newNote} onChange={handleChange} />
+          <button type='submit'>Save</button>
         </form>
       </div>
     </>
