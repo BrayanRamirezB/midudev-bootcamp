@@ -4,6 +4,7 @@ import {
   updateImportance,
   getAllNotes
 } from './services/notes/notes.js'
+import Notification from './components/Notification.jsx'
 import Note from './components/Note'
 import './App.css'
 
@@ -11,6 +12,7 @@ const App = () => {
   const [notes, setNotes] = useState([])
   const [newNote, setNewNote] = useState('')
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('Something happen')
 
   //para hacerlo con axios
   useEffect(() => {
@@ -69,8 +71,12 @@ const App = () => {
       .then((returnedNote) => {
         setNotes(notes.map((note) => (note.id !== id ? note : returnedNote)))
       })
-      .catch((error) => {
-        alert(error)
+      .catch(() => {
+        setError(`Note '${note.content}' was already removed from server`)
+        setTimeout(() => {
+          setError(null)
+        }, 5000)
+        setNotes(notes.filter((n) => n.id !== id))
       })
   }
 
@@ -79,6 +85,7 @@ const App = () => {
       <div>
         <h1>Notes</h1>
         {loading ? 'Loading...' : ''}
+        <Notification message={error} />
         <ul>
           {notes.map((note) => (
             <Note

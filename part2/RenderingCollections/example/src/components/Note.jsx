@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types'
+import './Note.css'
 
 const Note = ({ note, toggleImportance }) => {
   const label = note.important ? 'make not important' : 'make important'
 
   return (
-    <li>
+    <li className='note'>
       <p>
         Content: <small>{note.content}</small> <br />
         Date: <small>{note.date}</small>

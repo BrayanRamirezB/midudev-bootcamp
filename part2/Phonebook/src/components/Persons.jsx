@@ -11,7 +11,11 @@ const Persons = (props) => {
           return person.name.toUpperCase().includes(props.show.toUpperCase())
         })
         .map((person) => (
-          <Person key={person.name} {...person} />
+          <Person
+            key={person.id}
+            {...person}
+            deletePerson={() => props.deletePerson(person.id)}
+          />
         ))}
     </ol>
   )
@@ -20,6 +24,7 @@ const Persons = (props) => {
 Persons.propTypes = {
   persons: PropTypes.array,
   show: PropTypes.string,
+  deletePerson: PropTypes.func
 }
 
 export default Persons
