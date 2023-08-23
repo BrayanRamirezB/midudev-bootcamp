@@ -57,7 +57,7 @@ app.post('/api/notes', (req, res, next) => {
   const note = req.body
 
   if (!note || !note.content) {
-    return res.status(400).json({ error: 'note.content is missing' })
+    return res.status(400).json({ error: 'Content is missing' })
   }
 
   const createdNote = new Note({
@@ -101,5 +101,5 @@ app.use(handleErrors)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
-  console.log(`Server running on port http://localhost:${PORT}`)
+  console.log(`Server running on port http://localhost:${PORT}/api/notes`)
 })
