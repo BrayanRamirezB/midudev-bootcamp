@@ -21,6 +21,6 @@ export const createNote = (newObject) => {
 export const updateImportance = (id, note) => {
   const url = `${defaultURL}/${id}`
 
-  const request = axios.patch(url, note)
+  const request = axios.put(url, note)
   return request.then((response) => response.data)
 }

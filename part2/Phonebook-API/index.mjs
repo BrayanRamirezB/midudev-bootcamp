@@ -1,9 +1,11 @@
 import express from 'express'
 import cors from 'cors'
+import logger from './loggerMiddleware.mjs'
 
 const app = express()
 app.use(express.json())
 app.use(cors())
+app.use(logger)
 
 let persons = [
   { id: 1, name: 'Arto Hellas', number: '040-123456' },
@@ -81,6 +83,10 @@ app.put('/api/persons/:id', (req, res) => {
   persons[personIndex] = updatedPerson
 
   return res.json(updatedPerson)
+})
+
+app.use((req, res) => {
+  res.status(404).json({ error: 'Not found' })
 })
 
 const PORT = 3001
