@@ -62,25 +62,32 @@ app.post('/api/persons', (req, res, next) => {
     return res.status(400).json({ error: 'name or number is missing' }).end()
   }
 
-  Person.find({ name: people.name })
-    .then((person) => {
-      if (person.length !== 0) {
-        res.status(400).json({ error: 'name must be unique' })
-      } else {
-        const newPerson = new Person({
-          name: people.name,
-          number: people.number
-        })
+  const newPerson = new Person({
+    name: people.name,
+    number: people.number
+  })
 
-        newPerson
-          .save()
-          .then((savedPerson) => {
-            res.status(201).json(savedPerson)
-          })
-          .catch((error) => next(error))
+  newPerson
+    .save()
+    .then((savedPerson) => {
+      res.status(201).json(savedPerson)
+    })
+    .catch((error) => {
+      if (error.name === 'ValidationError') {
+        res.status(400).json({ error: 'Name must be unique' })
+      } else {
+        next(error)
       }
     })
-    .catch((error) => next(error))
+  // Person.find({ name: people.name })
+  //   .then((person) => {
+  //     if (person.length !== 0) {
+  //       res.status(400).json({ error: 'Name must be unique' })
+  //     } else {
+
+  //     }
+  //   })
+  //   .catch((error) => next(error))
 })
 
 app.put('/api/persons/:id', (req, res, next) => {

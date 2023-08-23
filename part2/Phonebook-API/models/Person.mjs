@@ -1,8 +1,9 @@
 import mongoose from 'mongoose'
+import uniqueValidator from 'mongoose-unique-validator'
 const { model, Schema } = mongoose
 
 const personSchema = new Schema({
-  name: String,
+  name: { type: String, unique: true },
   number: String
 })
 
@@ -13,6 +14,8 @@ personSchema.set('toJSON', {
     delete returnedObject.__v
   }
 })
+
+personSchema.plugin(uniqueValidator)
 
 const Person = model('Person', personSchema)
 
