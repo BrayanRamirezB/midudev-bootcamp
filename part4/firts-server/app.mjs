@@ -3,6 +3,7 @@ import express from 'express'
 import cors from 'cors'
 import { requestLogger, notFound, handleErrors } from './utils/middleware.mjs'
 import notesRouter from './controllers/Note.mjs'
+import usersRouter from './controllers/User.mjs'
 
 const app = express()
 
@@ -12,6 +13,7 @@ app.use(express.json())
 app.use(requestLogger)
 
 app.use('/api/notes', notesRouter)
+app.use('/api/users', usersRouter)
 
 app.use(notFound)
 // Control de errores para rutas desconocidas

@@ -7,13 +7,14 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development node --watch index.mjs",
     "start": "cross-env NODE_ENV=production node index.mjs",
-    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest --silent",
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest --silent tests/users.test.js",
     "test:watch": "npm run test -- --watch"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "cors": "2.8.5",
     "cross-env": "7.0.3",
     "dotenv": "16.3.1",
