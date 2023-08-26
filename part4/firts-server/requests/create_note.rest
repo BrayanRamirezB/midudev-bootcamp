@@ -1,7 +1,8 @@
 POST http://localhost:3001/api/notes
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZTkyMzY1YjQ4Mzk1ODZmMDI3NGFjMyIsInVzZXJuYW1lIjoiTWljdGxhbiIsImlhdCI6MTY5MzAxNzMwNywiZXhwIjoxNjkzNjIyMTA3fQ.KzFJSZpDfBk4hoA8RL6Jhn33MRsblRi5nHVMOgjdnss
 
 {
-    "content": "Esto es una nueva nota",
+    "content": "Prueba middleware",
     "important": true
 }

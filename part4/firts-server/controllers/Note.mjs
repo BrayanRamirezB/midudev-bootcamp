@@ -1,10 +1,12 @@
 import express from 'express'
 import Note from '../models/Note.mjs'
+import User from '../models/User.mjs'
+import userExtractor from '../utils/userExtractor.mjs'
 
 const notesRouter = express.Router()
 
 notesRouter.get('/', async (req, res) => {
-  const notes = await Note.find({})
+  const notes = await Note.find({}).populate('user', { username: 1, name: 1 })
   res.json(notes)
 })
 
@@ -25,7 +27,7 @@ notesRouter.get('/:id', async (req, res, next) => {
   }
 })
 
-notesRouter.delete('/:id', async (req, res, next) => {
+notesRouter.delete('/:id', userExtractor, async (req, res, next) => {
   const { id } = req.params
 
   try {
@@ -36,28 +38,36 @@ notesRouter.delete('/:id', async (req, res, next) => {
   }
 })
 
-notesRouter.post('/', async (req, res, next) => {
+notesRouter.post('/', userExtractor, async (req, res, next) => {
   const note = req.body
 
   if (!note || !note.content) {
     return res.status(400).json({ error: 'Content is missing' })
   }
 
+  const { userId } = req
+
+  const user = await User.findById(userId)
+
   const createdNote = new Note({
     content: note.content,
     important: note.important || false,
-    date: new Date().toISOString()
+    date: new Date().toISOString(),
+    user: user._id
   })
 
   try {
     const savedNote = await createdNote.save()
+    user.notes = user.notes.concat(savedNote._id)
+    await user.save()
+
     res.status(201).json(savedNote)
   } catch (error) {
     next(error)
   }
 })
 
-notesRouter.put('/:id', async (req, res, next) => {
+notesRouter.put('/:id', userExtractor, async (req, res, next) => {
   const { id } = req.params
   const note = req.body
 
