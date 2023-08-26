@@ -1,13 +1,17 @@
 import express from 'express'
 import Note from '../models/Note.mjs'
 import User from '../models/User.mjs'
-import userExtractor from '../utils/userExtractor.mjs'
+import { userExtractor } from '../utils/userExtractor.mjs'
 
 const notesRouter = express.Router()
 
-notesRouter.get('/', async (req, res) => {
-  const notes = await Note.find({}).populate('user', { username: 1, name: 1 })
-  res.json(notes)
+notesRouter.get('/', async (req, res, next) => {
+  try {
+    const notes = await Note.find({}).populate('user', { username: 1, name: 1 })
+    res.json(notes)
+  } catch (error) {
+    next(error)
+  }
 })
 
 notesRouter.get('/:id', async (req, res, next) => {
@@ -16,7 +20,6 @@ notesRouter.get('/:id', async (req, res, next) => {
   try {
     const note = await Note.findById(id)
 
-    console.log(note)
     if (note) {
       return res.json(note)
     } else {
@@ -30,6 +33,17 @@ notesRouter.get('/:id', async (req, res, next) => {
 notesRouter.delete('/:id', userExtractor, async (req, res, next) => {
   const { id } = req.params
 
+  const { userId } = req
+  const note = await Note.findById(id)
+
+  if (!note) {
+    return res.status(404).end()
+  }
+
+  if (note.user.toString() !== userId.toString()) {
+    return res.status(401).json({ error: 'user invalid' })
+  }
+
   try {
     await Note.findByIdAndRemove(id)
     res.status(204).end()
@@ -41,7 +55,7 @@ notesRouter.delete('/:id', userExtractor, async (req, res, next) => {
 notesRouter.post('/', userExtractor, async (req, res, next) => {
   const note = req.body
 
-  if (!note || !note.content) {
+  if (!note.content) {
     return res.status(400).json({ error: 'Content is missing' })
   }
 
@@ -69,19 +83,32 @@ notesRouter.post('/', userExtractor, async (req, res, next) => {
 
 notesRouter.put('/:id', userExtractor, async (req, res, next) => {
   const { id } = req.params
-  const note = req.body
+  const content = req.body
 
-  if (!('important' in note)) {
+  const { userId } = req
+  const note = await Note.findById(id)
+
+  if (!note) {
+    return res.status(404).end()
+  }
+
+  if (note.user.toString() !== userId.toString()) {
+    return res.status(401).json({ error: 'user invalid' })
+  }
+
+  if (!('important' in content)) {
     return res.status(400).json({ error: 'Content is missing' })
   }
 
   const newNoteInfo = {
-    important: note.important
+    important: content.important
   }
 
   try {
-    const note = await Note.findByIdAndUpdate(id, newNoteInfo, { new: true })
-    if (note) {
+    const noteSaved = await Note.findByIdAndUpdate(id, newNoteInfo, {
+      new: true
+    })
+    if (noteSaved) {
       res.status(200).json(note)
     } else {
       res.status(404).end()

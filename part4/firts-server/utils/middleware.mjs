@@ -8,7 +8,7 @@ export const requestLogger = (req, res, next) => {
   next()
 }
 
-export const notFound = (req, res, next) => {
+export const notFound = (req, res) => {
   res.status(404).end()
 }
 

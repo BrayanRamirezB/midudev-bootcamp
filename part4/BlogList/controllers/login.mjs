@@ -1,16 +1,16 @@
+import express from 'express'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
-import express from 'express'
 import User from '../models/User.mjs'
 
 const loginRouter = express.Router()
 
-loginRouter.post('/', async (request, response) => {
-  const { body } = request
+loginRouter.post('/', async (req, res) => {
+  const { body } = req
   const { username, password } = body
 
   if (!username || !password) {
-    return response.status(400).json({ error: 'Content is missing' })
+    return res.status(400).json({ error: 'Content is missing' })
   }
 
   const user = await User.findOne({ username })
@@ -18,7 +18,7 @@ loginRouter.post('/', async (request, response) => {
     user === null ? false : await bcrypt.compare(password, user.passwordHash)
 
   if (!(user && passwordCorrect)) {
-    return response.status(401).json({ error: 'invalid user or password' })
+    return res.status(401).json({ error: 'invalid user or password' })
   }
 
   const userForToken = {
@@ -30,7 +30,7 @@ loginRouter.post('/', async (request, response) => {
     expiresIn: 60 * 60 * 24 * 7
   })
 
-  response.send({ name: user.name, username: user.username, token })
+  res.send({ name: user.name, username: user.username, token })
 })
 
 export default loginRouter

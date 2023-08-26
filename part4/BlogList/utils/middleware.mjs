@@ -19,6 +19,10 @@ export const handleErrors = (error, req, res, next) => {
     return res.status(400).send({ error: 'id used is malformed' })
   } else if (error.name === 'ValidationError') {
     return res.status(400).json({ error: error.errors.message })
+  } else if (error.name === 'JsonWebTokenError') {
+    return res.status(401).json({ error: 'token missing or invalid' })
+  } else if (error.name === 'TokenExpirerError') {
+    return res.status(401).json({ error: 'token expired' })
   } else {
     res.status(500).end()
   }

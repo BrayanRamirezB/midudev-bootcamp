@@ -1,0 +1,9 @@
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZTk4OTcyMjcxM2IwZDZlNDc2OWI4NiIsInVzZXJuYW1lIjoiQm9kb3F1ZSIsImlhdCI6MTY5MzAzMjI3OSwiZXhwIjoxNjkzNjM3MDc5fQ.VyHmJoIEUs023iV5a7irgrHeGUDyWZtaVxthHvfHB0M
+
+{
+   "title": "Blog 3",
+    "author": "Ramisefsefro",
+    "url": "awsefsefd"
+}

@@ -4,10 +4,11 @@ import uniqueValidator from 'mongoose-unique-validator'
 const { Schema, model } = mongoose
 
 const blogSchema = new Schema({
-  title: { type: String, required: true, unique: true },
+  title: { type: String, required: true },
   author: { type: String },
   url: { type: String, required: true, unique: true },
-  likes: { type: Number }
+  likes: { type: Number },
+  user: { type: Schema.Types.ObjectId, ref: 'User' }
 })
 
 blogSchema.set('toJSON', {
