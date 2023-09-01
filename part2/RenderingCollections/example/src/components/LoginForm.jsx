@@ -9,6 +9,7 @@ const LoginForm = ({ handleUser }) => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
+
     try {
       const user = await loginService.login({ username, password })
 
@@ -24,7 +25,7 @@ const LoginForm = ({ handleUser }) => {
 
   return (
     <Togglable buttonLabel='Show Login'>
-      <form onSubmit={handleLogin}>
+      <form data-test-id='login-form' onSubmit={handleLogin}>
         <input
           type='text'
           value={username}
@@ -41,7 +42,9 @@ const LoginForm = ({ handleUser }) => {
           onChange={({ target }) => setPassword(target.value)}
         />
 
-        <button type='submit'>Login</button>
+        <button id='form-login-button' type='submit'>
+          Login
+        </button>
       </form>
     </Togglable>
   )

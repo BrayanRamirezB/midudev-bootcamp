@@ -69,18 +69,19 @@ const App = () => {
 
   const toggleImportanceOf = (id) => {
     const note = notes.find((n) => n.id === id)
-    const changedNote = { ...note, important: !note.important }
+    const changedNote = { important: !note.important }
 
     updateImportance(id, changedNote)
       .then((returnedNote) => {
-        setNotes(notes.map((note) => (note.id !== id ? note : returnedNote)))
+        setNotes((prevNotes) =>
+          prevNotes.map((note) => (note.id !== id ? note : returnedNote))
+        )
       })
       .catch(() => {
-        setError(`Note '${note.content}' was already removed from server`)
+        setError('Something went wrong')
         setTimeout(() => {
           setError(null)
         }, 5000)
-        setNotes(notes.filter((n) => n.id !== id))
       })
   }
 
@@ -96,9 +97,9 @@ const App = () => {
           <LoginForm handleUser={handleUser} />
         )}
         <ul>
-          {notes.map((note) => (
+          {notes.map((note, i) => (
             <Note
-              key={note.id}
+              key={i}
               note={note}
               toggleImportance={() => toggleImportanceOf(note.id)}
             />

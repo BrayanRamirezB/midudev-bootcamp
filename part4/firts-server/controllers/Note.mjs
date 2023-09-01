@@ -30,6 +30,32 @@ notesRouter.get('/:id', async (req, res, next) => {
   }
 })
 
+notesRouter.put('/:id', userExtractor, async (req, res, next) => {
+  const { id } = req.params
+  const content = req.body
+
+  if (!('important' in content)) {
+    return res.status(400).json({ error: 'Content is missing' })
+  }
+
+  const newNoteInfo = {
+    important: content.important
+  }
+
+  try {
+    const noteSaved = await Note.findByIdAndUpdate(id, newNoteInfo, {
+      new: true
+    })
+    if (noteSaved) {
+      res.status(200).json(noteSaved)
+    } else {
+      res.status(404).end()
+    }
+  } catch (error) {
+    next(error)
+  }
+})
+
 notesRouter.delete('/:id', userExtractor, async (req, res, next) => {
   const { id } = req.params
 
@@ -76,43 +102,6 @@ notesRouter.post('/', userExtractor, async (req, res, next) => {
     await user.save()
 
     res.status(201).json(savedNote)
-  } catch (error) {
-    next(error)
-  }
-})
-
-notesRouter.put('/:id', userExtractor, async (req, res, next) => {
-  const { id } = req.params
-  const content = req.body
-
-  const { userId } = req
-  const note = await Note.findById(id)
-
-  if (!note) {
-    return res.status(404).end()
-  }
-
-  if (note.user.toString() !== userId.toString()) {
-    return res.status(401).json({ error: 'user invalid' })
-  }
-
-  if (!('important' in content)) {
-    return res.status(400).json({ error: 'Content is missing' })
-  }
-
-  const newNoteInfo = {
-    important: content.important
-  }
-
-  try {
-    const noteSaved = await Note.findByIdAndUpdate(id, newNoteInfo, {
-      new: true
-    })
-    if (noteSaved) {
-      res.status(200).json(note)
-    } else {
-      res.status(404).end()
-    }
   } catch (error) {
     next(error)
   }

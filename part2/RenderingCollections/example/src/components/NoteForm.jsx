@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import Togglable from './Togglable'
 
 const NotesForm = ({ addNote, handleClick }) => {
   const [newNote, setNewNote] = useState('')
+  const togglableRef = useRef()
 
   const handleChange = (event) => {
     setNewNote(event.target.value)
@@ -18,11 +19,12 @@ const NotesForm = ({ addNote, handleClick }) => {
 
     addNote(noteToAddState)
     setNewNote('')
+    togglableRef.current.toggleVisibility()
   }
 
   return (
     <>
-      <Togglable buttonLabel='New Note'>
+      <Togglable buttonLabel='New Note' ref={togglableRef}>
         <h3>Create a new note</h3>
         <form onSubmit={handleSubmit}>
           <input
