@@ -85,17 +85,6 @@ blogsRouter.put('/:id', userExtractor, async (request, response, next) => {
   const { id } = request.params
   const content = request.body
 
-  const { userId } = request
-  const blog = await Blog.findById(id)
-
-  if (!blog) {
-    return response.status(404).end()
-  }
-
-  if (blog.user.toString() !== userId.toString()) {
-    return response.status(401).json({ error: 'user invalid' })
-  }
-
   if (!('likes' in content)) {
     return response.status(400).send({ error: 'New likes is mising' })
   }
