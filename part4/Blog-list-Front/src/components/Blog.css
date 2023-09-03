@@ -1,0 +1,16 @@
+#blogContainer { 
+    background-color: rgba(106, 90, 205, 0.4);
+    margin: 0.5rem;
+    padding: 0.2rem 1.3rem;
+    border-radius: 8px;
+}
+
+#blogContainer button {
+    background-color: deepskyblue;
+    margin-bottom: 0.7rem;
+    padding: 0.2rem 1.5rem;
+}
+
+#blogContainer #deleteButton {
+    background-color: crimson;
+}

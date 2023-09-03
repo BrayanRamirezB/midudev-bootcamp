@@ -80,6 +80,57 @@ function App() {
       })
   }
 
+  const updateBlogLikes = (id) => {
+    const blog = blogs.find((b) => b.id === id)
+    const changedBlogLikes = { likes: blog.likes + 1 }
+
+    blogService
+      .updateLikes(id, changedBlogLikes)
+      .then((returnedBlog) => {
+        setBlogs((prevBlogs) =>
+          prevBlogs.map((blog) => (blog.id !== id ? blog : returnedBlog))
+        )
+        setMessage(`${blog.title} received a like from ${user.username}`)
+        setType('success')
+        setTimeout(() => {
+          setMessage(null)
+          setType(null)
+        }, 5000)
+      })
+      .catch(() => {
+        setMessage('Something went wrong')
+        setType('error')
+        setTimeout(() => {
+          setMessage(null)
+          setType(null)
+        }, 5000)
+      })
+  }
+
+  const removeBlog = (id) => {
+    const blog = blogs.find((b) => b.id === id)
+
+    blogService
+      .deleteBlog(id)
+      .then(() => {
+        setBlogs((prevBlogs) => prevBlogs.filter((blog) => blog.id !== id))
+        setMessage(`${blog.title} was removed from ${user.username}`)
+        setType('success')
+        setTimeout(() => {
+          setMessage(null)
+          setType(null)
+        }, 5000)
+      })
+      .catch((response) => {
+        setMessage(response.response.data.error)
+        setType('error')
+        setTimeout(() => {
+          setMessage(null)
+          setType(null)
+        }, 5000)
+      })
+  }
+
   if (user === null) {
     return (
       <div>
@@ -100,9 +151,20 @@ function App() {
         addBlog={addBlog}
         handleClick={handleLogout}
       />
-      {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
-      ))}
+      {blogs
+        .sort(function (a, b) {
+          if (a.likes > b.likes) return -1
+          if (a.likes < b.likes) return 1
+          return 0
+        })
+        .map((blog) => (
+          <Blog
+            key={blog.id}
+            blog={blog}
+            updateBlogLikes={() => updateBlogLikes(blog.id)}
+            deleteBlog={() => removeBlog(blog.id)}
+          />
+        ))}
     </div>
   )
 }

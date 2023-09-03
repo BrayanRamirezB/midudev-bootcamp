@@ -70,7 +70,9 @@ blogsRouter.delete('/:id', userExtractor, async (request, response, next) => {
   }
 
   if (blog.user.toString() !== userId.toString()) {
-    return response.status(401).json({ error: 'user invalid' })
+    return response
+      .status(401)
+      .json({ error: 'Only the author can remove this blog' })
   }
 
   try {

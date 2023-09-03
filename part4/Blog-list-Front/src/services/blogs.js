@@ -29,8 +29,19 @@ const updateLikes = (id, blog) => {
       Authorization: token
     }
   }
-  const request = axios.put(url, {id, blog}, config)
+  const request = axios.put(url, blog, config)
   return request.then((response) => response.data)
 }
 
-export default { getAll, setToken, createBlog, updateLikes }
+const deleteBlog = (id) => {
+  const url = `${baseUrl}/${id}`
+  const config = {
+    headers: {
+      Authorization: token
+    }
+  }
+  const request = axios.delete(url, config)
+  return request.then((response) => response.data)
+}
+
+export default { getAll, setToken, createBlog, updateLikes, deleteBlog }

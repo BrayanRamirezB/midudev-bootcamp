@@ -39,7 +39,9 @@ const LoginForm = ({ handleUser }) => {
           placeholder='Password'
           onChange={({ target }) => setPassword(target.value)}
         />
-        <button type='submit'>Login</button>
+        <button id='form-login-button' type='submit'>
+          Login
+        </button>
       </form>
     </div>
   )

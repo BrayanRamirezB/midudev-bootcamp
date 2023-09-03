@@ -8,7 +8,8 @@
     "dev": "cross-env NODE_ENV=development node --watch index.mjs",
     "start": "cross-env NODE_ENV=production node index.mjs",
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest --silent",
-    "test:watch": "npm run test -- --watch"
+    "test:watch": "npm run test -- --watch",
+    "start:test": "cross-env NODE_ENV=test node index.mjs"
   },
   "author": "brayanrb",
   "license": "ISC",
