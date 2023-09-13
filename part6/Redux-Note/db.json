@@ -1,0 +1,52 @@
+{
+  "notes": [
+    {
+      "content": "note 1",
+      "important": true,
+      "id": 1,
+      "importat": true
+    },
+    {
+      "content": "note 2",
+      "important": false,
+      "id": 2,
+      "importat": true
+    },
+    {
+      "content": "note 3",
+      "important": true,
+      "id": 3,
+      "importat": true
+    },
+    {
+      "content": "note 4",
+      "important": true,
+      "id": 4
+    },
+    {
+      "content": "Note 5",
+      "important": true,
+      "id": 5
+    },
+    {
+      "content": "note 6",
+      "important": false,
+      "id": 6
+    },
+    {
+      "content": "note 7",
+      "important": false,
+      "id": 7
+    },
+    {
+      "content": "new note",
+      "important": true,
+      "id": 8
+    },
+    {
+      "content": "Another note",
+      "important": true,
+      "id": 9
+    }
+  ]
+}
