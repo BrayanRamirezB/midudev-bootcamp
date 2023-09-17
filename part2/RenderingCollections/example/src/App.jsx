@@ -1,127 +1,73 @@
-import { useEffect, useState } from 'react'
-import {
-  createNote,
-  updateImportance,
-  getAllNotes,
-  setToken
-} from './services/notes.js'
-import Notification from './components/Notification.jsx'
-import Note from './components/Note'
-import LoginForm from './components/LoginForm.jsx'
-import NoteForm from './components/NoteForm.jsx'
+import { BrowserRouter, Link, Route, Routes, Navigate } from 'react-router-dom'
+import Notes from './Notes'
+import NoteDetail from './components/NoteDetail'
+import Login from './Login'
+import { useNotes } from './hooks/useNotes'
+import { useUser } from './hooks/useUser'
 import './App.css'
 
+const Home = () => <h1>Home Page</h1>
+
+const Users = () => <h1>Users</h1>
+
+const inLineStyles = {
+  padding: 5
+}
+
 const App = () => {
-  const [notes, setNotes] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
-  const [user, setUser] = useState(null)
-
-  //para hacerlo con axios
-  useEffect(() => {
-    setLoading(true)
-    getAllNotes()
-      .then((notes) => {
-        setNotes(notes)
-        setLoading(false)
-      })
-      .catch((error) => {
-        alert(error)
-      })
-  }, [])
-
-  useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedNoteAppUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      setToken(user.token)
-    }
-  }, [])
-
-  const addNote = (noteToAddState) => {
-    createNote(noteToAddState)
-      .then((newNote) => {
-        setNotes((prevNotes) => prevNotes.concat(newNote))
-      })
-      .catch((error) => {
-        alert(error)
-      })
-  }
-
-  const handleLogout = () => {
-    setUser(null)
-    setToken(user.token)
-    window.localStorage.removeItem('loggedNoteAppUser')
-  }
-
-  const handleUser = async (user) => {
-    if (user) {
-      setToken(user.token)
-      setUser(user)
-    } else {
-      setError('Wrong credentials')
-      setTimeout(() => {
-        setError(null)
-      }, 5000)
-    }
-  }
-
-  const toggleImportanceOf = (id) => {
-    const note = notes.find((n) => n.id === id)
-    const changedNote = { important: !note.important }
-
-    updateImportance(id, changedNote)
-      .then((returnedNote) => {
-        setNotes((prevNotes) =>
-          prevNotes.map((note) => (note.id !== id ? note : returnedNote))
-        )
-      })
-      .catch(() => {
-        setError('Something went wrong')
-        setTimeout(() => {
-          setError(null)
-        }, 5000)
-      })
-  }
+  const { notes } = useNotes()
+  const { user, setUser } = useUser()
 
   return (
-    <>
-      <div>
-        <h1>Notes</h1>
-        {loading ? 'Loading...' : ''}
-        <Notification message={error} />
+    <BrowserRouter>
+      <header>
+        <Link to={'/'} style={inLineStyles}>
+          Home
+        </Link>
+        <Link to={'/notes'} style={inLineStyles}>
+          Notes
+        </Link>
+        <Link to={'/users'} style={inLineStyles}>
+          Users
+        </Link>
         {user ? (
-          <NoteForm addNote={addNote} handleClick={handleLogout} />
+          <em>Logged as {user.name}</em>
         ) : (
-          <LoginForm handleUser={handleUser} />
+          <Link to='/login' style={inLineStyles}>
+            Login
+          </Link>
         )}
-        <ul>
-          {notes.map((note, i) => (
-            <Note
-              key={i}
-              note={note}
-              toggleImportance={() => toggleImportanceOf(note.id)}
+      </header>
+
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route
+          path='/users'
+          element={user ? <Users /> : <Navigate replace to='/login' />}
+        />
+        <Route
+          path='/notes'
+          element={
+            <Notes
+              onLogin={(user) => setUser(user)}
+              onLogout={(user) => setUser(user)}
             />
-          ))}
-        </ul>
-      </div>
-    </>
+          }
+        />
+        <Route path='/notes/:noteId' element={<NoteDetail notes={notes} />} />
+        <Route
+          path='/login'
+          element={
+            user ? (
+              <Navigate replace to='/' />
+            ) : (
+              <Login onLogin={(user) => setUser(user)} />
+            )
+          }
+        />
+      </Routes>
+    </BrowserRouter>
   )
 }
 
 export default App
-
-//Para hacerlo con fetch
-// useEffect(() => {
-//   setLoading(true)
-//   //React renderiza lo que pueda antes, por eso debe esperar a hacer el fetch
-//   setTimeout(() => {
-//     fetch('https://jsonplaceholder.typicode.com/posts')
-//       .then((response) => response.json())
-//       .then((json) => {
-//         setNotes(json)
-//         setLoading(false)
-//       })
-//   }, 2000)
-// }, [newNote]) //Solo se ejecuta una vez por la dependencia [], ahora tiene una dependencia y se ejecuta cada vez que cambia

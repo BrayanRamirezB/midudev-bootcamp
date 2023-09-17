@@ -1,57 +1,37 @@
 import PropTypes from 'prop-types'
-import { useState } from 'react'
-import Togglable from './Togglable'
-import loginService from '../services/login.js'
 
-const LoginForm = ({ handleUser }) => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-
-  const handleLogin = async (event) => {
-    event.preventDefault()
-
-    try {
-      const user = await loginService.login({ username, password })
-
-      window.localStorage.setItem('loggedNoteAppUser', JSON.stringify(user))
-
-      handleUser(user)
-      setUsername('')
-      setPassword('')
-    } catch (e) {
-      handleUser(null)
-    }
-  }
-
+const LoginForm = ({ handleSubmit, ...props }) => {
   return (
-    <Togglable buttonLabel='Show Login'>
-      <form data-test-id='login-form' onSubmit={handleLogin}>
-        <input
-          type='text'
-          value={username}
-          name='Username'
-          placeholder='Username'
-          onChange={({ target }) => setUsername(target.value)}
-        />
+    <form data-test-id='login-form' onSubmit={handleSubmit}>
+      <input
+        type='text'
+        value={props.username}
+        onChange={props.handleUsernameChange}
+        name='Username'
+        placeholder='Username'
+      />
 
-        <input
-          type='password'
-          value={password}
-          name='Password'
-          placeholder='Password'
-          onChange={({ target }) => setPassword(target.value)}
-        />
+      <input
+        type='password'
+        value={props.password}
+        onChange={props.handlePasswordChange}
+        name='Password'
+        placeholder='Password'
+      />
 
-        <button id='form-login-button' type='submit'>
-          Login
-        </button>
-      </form>
-    </Togglable>
+      <button id='form-login-button' type='submit'>
+        Login
+      </button>
+    </form>
   )
 }
 
 LoginForm.propTypes = {
-  handleUser: PropTypes.func
+  handleSubmit: PropTypes.func,
+  handlePasswordChange: PropTypes.func,
+  handleUsernameChange: PropTypes.func,
+  username: PropTypes.string,
+  password: PropTypes.string
 }
 
 export default LoginForm

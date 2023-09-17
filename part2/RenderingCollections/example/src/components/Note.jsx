@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 import './Note.css'
 
 const Note = ({ note, toggleImportance }) => {
@@ -7,7 +8,9 @@ const Note = ({ note, toggleImportance }) => {
   return (
     <li className='note'>
       <p>
-        Content: <small>{note.content}</small> <br />
+        <Link to={`/notes/${note.id}`}>
+          Content: <small>{note.content}</small> <br />
+        </Link>
         Date: <small>{note.date}</small>
       </p>
       <button onClick={toggleImportance}>{label}</button>
