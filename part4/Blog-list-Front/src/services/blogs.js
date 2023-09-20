@@ -3,45 +3,46 @@ const baseUrl = 'http://localhost:3003/api/blogs'
 
 let token = null
 
-const setToken = (newToken) => {
+export const setToken = (newToken) => {
   token = `Bearer ${newToken}`
 }
 
-const getAll = () => {
-  const request = axios.get(baseUrl)
-  return request.then((response) => response.data)
+export const getAll = async () => {
+  const response = await axios.get(baseUrl)
+  return response.data
 }
 
-const createBlog = (newObject) => {
+export const createBlog = async (newObject) => {
   const config = {
     headers: {
       Authorization: token
     }
   }
-  const request = axios.post(baseUrl, newObject, config)
-  return request.then((response) => response.data)
+
+  const response = await axios.post(baseUrl, newObject, config)
+  return response.data
 }
 
-const updateLikes = (id, blog) => {
+export const updateLikes = async (id, blog) => {
   const url = `${baseUrl}/${id}`
   const config = {
     headers: {
       Authorization: token
     }
   }
-  const request = axios.put(url, blog, config)
-  return request.then((response) => response.data)
+
+  const response = await axios.put(url, blog, config)
+  return response.data
 }
 
-const deleteBlog = (id) => {
+export const deleteBlog = async (id) => {
   const url = `${baseUrl}/${id}`
   const config = {
     headers: {
       Authorization: token
     }
   }
-  const request = axios.delete(url, config)
-  return request.then((response) => response.data)
-}
 
-export default { getAll, setToken, createBlog, updateLikes, deleteBlog }
+  const response = await axios.delete(url, config)
+  return response.data
+}

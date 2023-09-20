@@ -1,25 +1,22 @@
 import { useState } from 'react'
-import login from '../services/login.js'
+import { useDispatch } from 'react-redux'
+import { setUser } from '../reducers/userSlice.js'
+
 import PropTypes from 'prop-types'
 
-const LoginForm = ({ handleUser }) => {
+const LoginForm = () => {
+  const dispatch = useDispatch()
+
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
   const handleLogin = async (event) => {
     event.preventDefault()
 
-    try {
-      const user = await login({ username, password })
+    dispatch(setUser({ username, password }))
 
-      localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
-
-      handleUser(user)
-      setUsername('')
-      setPassword('')
-    } catch (e) {
-      handleUser(null)
-    }
+    setUsername('')
+    setPassword('')
   }
 
   return (

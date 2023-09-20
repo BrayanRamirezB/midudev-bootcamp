@@ -1,12 +1,13 @@
-import { useState } from 'react'
 import Notification from './components/Notification.jsx'
 import Note from './components/Note'
 import NoteForm from './components/NoteForm.jsx'
 import PropTypes from 'prop-types'
 import Login from './Login.jsx'
+import { useState } from 'react'
 import { useUser } from './hooks/useUser.jsx'
 import { useNotes } from './hooks/useNotes.jsx'
-import './App.css'
+
+import Table from 'react-bootstrap/Table'
 
 const Notes = ({ onLogin, onLogout }) => {
   const [error, setError] = useState(null)
@@ -48,15 +49,18 @@ const Notes = ({ onLogin, onLogout }) => {
         ) : (
           <Login onLogin={handleUser} />
         )}
-        <ul>
-          {notes.map((note, i) => (
-            <Note
-              key={i}
-              note={note}
-              toggleImportance={() => toggleImportanceOf(note.id)}
-            />
-          ))}
-        </ul>
+        <Table striped>
+          <tbody>
+            {notes.map((note, i) => (
+              <tr key={i}>
+                <Note
+                  note={note}
+                  toggleImportance={() => toggleImportanceOf(note.id)}
+                />
+              </tr>
+            ))}
+          </tbody>
+        </Table>
       </div>
     </>
   )
