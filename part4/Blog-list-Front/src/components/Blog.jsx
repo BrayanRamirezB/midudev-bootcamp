@@ -1,32 +1,36 @@
-import Togglable from './Togglable'
+import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import './Blog.css'
 
-const Blog = ({ blog, updateBlogLikes, deleteBlog }) => {
+import Card from 'react-bootstrap/Card'
+import Col from 'react-bootstrap/Col'
+
+const Blog = ({ blog }) => {
   return (
-    <div id='blogContainer'>
-      <i>{blog.title}</i> written by <strong> {blog.author}</strong>
-      <Togglable buttonLabel='View'>
-        {blog.url}
-        <br />
-        Likes {blog.likes}
-        <button onClick={updateBlogLikes}>like</button>
-        <br />
-        <strong>
-          <i>{blog.author}</i>
-        </strong>
-        <br />
-        <button id='deleteButton' onClick={deleteBlog}>
-          Remove Blog
-        </button>
-      </Togglable>
-    </div>
+    <Col>
+      <Card
+        style={{ width: '18rem', background: '#8E2DE2', color: 'white' }}
+        className='text-center'
+      >
+        <Card.Body>
+          <Card.Title>
+            <Link
+              to={`/${blog.id}`}
+              style={{ textDecoration: 'none', color: 'white' }}
+            >
+              <i>{blog.title} </i>
+            </Link>
+          </Card.Title>
+          <Card.Text>
+            written by <strong> {blog.author}</strong>
+          </Card.Text>
+        </Card.Body>
+      </Card>
+      <br />
+    </Col>
   )
 }
 Blog.propTypes = {
-  blog: PropTypes.object,
-  updateBlogLikes: PropTypes.func,
-  deleteBlog: PropTypes.func
+  blog: PropTypes.object
 }
 
 export default Blog

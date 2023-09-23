@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types'
 import { useState, forwardRef, useImperativeHandle } from 'react'
-import './Togglable.css'
+
+import Button from 'react-bootstrap/Button'
+import Container from 'react-bootstrap/Container'
 
 const Togglable = forwardRef(({ children, buttonLabel }, ref) => {
   const [visible, setVisible] = useState(false)
@@ -16,20 +18,18 @@ const Togglable = forwardRef(({ children, buttonLabel }, ref) => {
   })
 
   return (
-    <div>
+    <Container>
       <div style={hideWhenVisible}>
-        <button className='togglableBtn' onClick={toggleVisibility}>
-          {buttonLabel}
-        </button>
+        <Container className='d-flex justify-content-center'>
+          <Button onClick={toggleVisibility}>{buttonLabel}</Button>
+        </Container>
       </div>
 
       <div style={showWhenVisible}>
         {children}
-        <button className='togglableBtn' onClick={toggleVisibility}>
-          Cancel
-        </button>
+        <Button onClick={toggleVisibility}>Cancel</Button>
       </div>
-    </div>
+    </Container>
   )
 })
 

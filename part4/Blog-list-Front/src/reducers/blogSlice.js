@@ -65,7 +65,6 @@ export const updateOneBlogLikes = (id, username) => {
           )
         )
       } catch (e) {
-        console.log(e)
         dispatch(notifyChange('Something went wrong', 'error', 5))
       }
     }

@@ -1,83 +1,101 @@
-import Blog from './components/Blog'
-import LoginForm from './components/LoginForm'
-import BlogForm from './components/BlogForm'
+import Blogs from './components/Blogs'
+import Login from './components/Login'
+import Users from './components/Users'
 import Notification from './components/Notification'
-import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import {
-  getInitBlogs,
-  addNewBlog,
-  deleteOneBlog,
-  updateOneBlogLikes
-} from './reducers/blogSlice'
-import { setSavedUser, resetUser } from './reducers/userSlice'
-import './App.css'
+import UserDetail from './components/UserDetail'
+import BlogDetail from './components/BlogDetail'
+import Logout from './components/Logout'
+import { useUser } from './hooks/useUser'
+import { BrowserRouter, Link, Route, Routes, Navigate } from 'react-router-dom'
+
+import Container from 'react-bootstrap/Container'
+import Nav from 'react-bootstrap/Nav'
+import Navbar from 'react-bootstrap/Navbar'
 
 function App() {
-  const dispatch = useDispatch()
-  const blogs = useSelector((state) => state.blogs)
-  const user = useSelector((state) => state.users)
+  const { user } = useUser()
 
-  useEffect(() => {
-    dispatch(getInitBlogs())
-  }, [dispatch])
-
-  useEffect(() => {
-    const loggedUserJSON = localStorage.getItem('loggedBlogAppUser')
-
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      dispatch(setSavedUser(user))
-    }
-  }, [dispatch])
-
-  const handleLogout = () => {
-    dispatch(resetUser())
-  }
-
-  const addBlog = (blogToAddState) => {
-    dispatch(addNewBlog(blogToAddState, user.username))
-  }
-
-  const updateBlogLikes = (id) => {
-    dispatch(updateOneBlogLikes(id, user.username))
-  }
-
-  const removeBlog = (id) => {
-    dispatch(deleteOneBlog(id, user.username))
-  }
-
-  const sortenedBlogs = blogs.slice().sort((a, b) => b.likes - a.likes)
-
-  if (user.username === null) {
-    return (
-      <div>
-        <h1>Log in to application</h1>
-        <Notification />
-        <LoginForm />
-      </div>
-    )
+  const inLineStyles = {
+    padding: 15,
+    textDecoration: 'none',
+    color: 'white'
   }
 
   return (
-    <div>
-      <h1>Blogs</h1>
-      <Notification />
+    <BrowserRouter>
+      <div className='container'>
+        <Navbar
+          collapseOnSelect
+          expand='lg'
+          bg='primary'
+          data-bs-theme='dark'
+          sticky='top'
+        >
+          <Container>
+            <Navbar.Brand>
+              <Link to={'/'} style={inLineStyles}>
+                Blogs
+              </Link>
+            </Navbar.Brand>
+            <Navbar.Toggle aria-controls='responsive-navbar-nav' />
+            <Navbar.Collapse id='responsive-navbar-nav'>
+              <Nav className='me-auto'>
+                <Nav>
+                  <Link to={'/users'} style={inLineStyles}>
+                    Users
+                  </Link>
+                </Nav>
 
-      <BlogForm
-        username={user.username}
-        addBlog={addBlog}
-        handleClick={handleLogout}
-      />
-      {sortenedBlogs.map((blog) => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-          updateBlogLikes={() => updateBlogLikes(blog.id)}
-          deleteBlog={() => removeBlog(blog.id)}
-        />
-      ))}
-    </div>
+                <Nav>
+                  {user.username ? (
+                    <Navbar.Text>
+                      <Logout username={user.username} />{' '}
+                    </Navbar.Text>
+                  ) : (
+                    <Nav>
+                      <Link to={'/login'} style={inLineStyles}>
+                        Login
+                      </Link>
+                    </Nav>
+                  )}
+                </Nav>
+              </Nav>
+            </Navbar.Collapse>
+          </Container>
+        </Navbar>
+
+        <Notification />
+        <br />
+
+        <Routes>
+          <Route
+            path='/'
+            element={
+              user.username ? (
+                <Blogs username={user.username} />
+              ) : (
+                <Navigate replace to='/login' />
+              )
+            }
+          />
+          <Route
+            path='/users'
+            element={
+              user.username ? <Users /> : <Navigate replace to='/login' />
+            }
+          />
+          <Route
+            path='/login'
+            element={user.username ? <Navigate replace to='/' /> : <Login />}
+          />
+          <Route path='/users/:userId' element={<UserDetail user={user} />} />
+          <Route
+            path='/:blogId'
+            element={<BlogDetail username={user.username} />}
+          />
+        </Routes>
+      </div>
+    </BrowserRouter>
   )
 }
 

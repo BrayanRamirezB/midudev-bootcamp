@@ -1,9 +1,17 @@
-import { useRef, useState } from 'react'
 import Togglable from './Togglable'
+import { useRef, useState } from 'react'
+import { useBlogs } from '../hooks/useBlogs'
 import PropTypes from 'prop-types'
-import './BlogForm.css'
 
-const BlogForm = ({ addBlog, handleClick, username }) => {
+import Button from 'react-bootstrap/Button'
+import Form from 'react-bootstrap/Form'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import Container from 'react-bootstrap/Container'
+
+const BlogForm = ({ username }) => {
+  const { addBlog } = useBlogs()
+
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -18,7 +26,7 @@ const BlogForm = ({ addBlog, handleClick, username }) => {
         author: author,
         url: url
       }
-      addBlog(blogToAddState)
+      addBlog(blogToAddState, username)
       setTitle('')
       setAuthor('')
       setUrl('')
@@ -29,49 +37,65 @@ const BlogForm = ({ addBlog, handleClick, username }) => {
   }
 
   return (
-    <>
-      <div id='Logout'>
-        <p>
-          <strong>
-            <i>{username} logged in</i>
-          </strong>
-        </p>
-        <button onClick={handleClick}>Logout</button>
-      </div>
+    <Container>
       <Togglable buttonLabel={'Add new Blog'} ref={togglableRef}>
         <h2>Create a new Blog</h2>
         <div id='Blogform'>
-          <form onSubmit={handleSubmit}>
-            <input
-              type='text'
-              value={title}
-              placeholder='Write your blog title'
-              onChange={({ target }) => setTitle(target.value)}
-            />
-            <input
-              type='text'
-              value={author}
-              placeholder='Write your blog author'
-              onChange={({ target }) => setAuthor(target.value)}
-            />
-            <input
-              type='text'
-              value={url}
-              placeholder='Write your blog URL'
-              onChange={({ target }) => setUrl(target.value)}
-            />
-            <button type='submit'>Save</button>
-          </form>
+          <Form onSubmit={handleSubmit}>
+            <Row>
+              <Col>
+                <Form.Group>
+                  <Form.Label>Blog title</Form.Label>
+                  <Form.Control
+                    type='text'
+                    value={title}
+                    placeholder='Write your blog title'
+                    onChange={({ target }) => setTitle(target.value)}
+                  />
+                </Form.Group>
+              </Col>
+
+              <Col>
+                <Form.Group>
+                  <Form.Label>Blog author</Form.Label>
+                  <Form.Control
+                    type='text'
+                    value={author}
+                    placeholder='Write your blog author'
+                    onChange={({ target }) => setAuthor(target.value)}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col>
+                <Form.Group>
+                  <Form.Label>Blog URL</Form.Label>
+                  <Form.Control
+                    type='text'
+                    value={url}
+                    placeholder='Write your blog URL'
+                    onChange={({ target }) => setUrl(target.value)}
+                  />
+                </Form.Group>
+              </Col>
+
+              <Col className='text-center'>
+                <br />
+                <Button type='submit'>Save</Button>
+              </Col>
+            </Row>
+          </Form>
         </div>
+        <br />
       </Togglable>
-    </>
+    </Container>
   )
 }
 
 BlogForm.propTypes = {
-  username: PropTypes.string,
-  addBlog: PropTypes.func,
-  handleClick: PropTypes.func
+  username: PropTypes.string
 }
 
 export default BlogForm
