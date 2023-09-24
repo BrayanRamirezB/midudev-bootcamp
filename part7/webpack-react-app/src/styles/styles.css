@@ -1,0 +1,19 @@
+* {
+    box-sizing: border-box;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+body {
+    background: #242424;
+    display: grid;
+    place-content: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.container {
+    border: 1px solid greenyellow;
+    color: greenyellow;
+    padding: 1rem;
+    border-radius: 4px;
+}
